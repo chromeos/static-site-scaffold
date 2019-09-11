@@ -1,0 +1,24 @@
+{
+  "plugins": ["@babel/plugin-syntax-dynamic-import"],
+  "comments": false,
+  "presets": [
+    [
+      "minify",
+      {
+        "mangle": true
+      }
+    ]
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        [
+          "minify",
+          {
+            "mangle": true
+          }
+        ]
+      ]
+    }
+  }
+}

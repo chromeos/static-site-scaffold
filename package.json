@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pretest:browser": "run-p test:lint build",
-    "test": "nyc ava",
+    "pretest": "run-p test:lint build",
     "test:lint": "eslint tests",
-    "test:slow": "ava tests/lighthouse.js",
+    "test": "nyc ava",
+    "posttest": "ava tests/lighthouse.js",
     "js": "rollup -c",
     "js:lint": "eslint src lib gulpfile.js rollup.config.js",
     "js:watch": "rollup -c -w",

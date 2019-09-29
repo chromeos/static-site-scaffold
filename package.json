@@ -1,5 +1,5 @@
 {
-  "name": "cros.dev",
+  "name": "chromeos-static-site-starter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,6 @@
     "pretest": "run-p test:lint build",
     "test:lint": "eslint tests",
     "test": "nyc ava",
-    "posttest": "ava tests/lighthouse.js",
     "js": "rollup -c",
     "js:lint": "eslint src lib gulpfile.js rollup.config.js",
     "js:watch": "rollup -c -w",
@@ -100,6 +99,7 @@
   },
   "dependencies": {
     "@11ty/eleventy": "^0.8.3",
+    "lazypipe": "^1.0.2",
     "markdown-it": "^9.1.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-attrs": "^3.0.1",

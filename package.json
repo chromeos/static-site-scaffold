@@ -33,6 +33,12 @@
       "tests/**/*"
     ]
   },
+  "nyc": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "all": true
+  },
   "peerDependencies": {
     "gulp": "^4.0.2",
     "@11ty/eleventy": "^0.8.3",

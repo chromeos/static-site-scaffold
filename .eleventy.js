@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const markdown = require('./lib/markdown');
-// const nunjucks = require('./lib/nunjucks');
+const scaffold = require('static-site-scaffold/lib/11ty.config');
 
-module.exports = function(config) {
-  config.setLibrary('md', markdown);
-  // config.setLibrary('njk', nunjucks);
-
-  return {
-    dir: {
-      input: 'src',
-      output: 'public',
-      includes: '_components',
-      layouts: '_layouts',
-    },
-    dataTemplateEngine: 'njk',
-    markdownTemplateEngine: 'njk',
-    htmlTemplateEngine: 'njk',
-    templateEngineOverride: 'njk',
-  };
+module.exports = function(eleventy) {
+  return scaffold()(eleventy);
 };

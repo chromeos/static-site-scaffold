@@ -1,6 +1,6 @@
 {
-  "name": "Chrome OS",
-  "short_name": "Chrome OS",
+  "name": "My Awesome App",
+  "short_name": "Awesome",
   "theme_color": "#2196f3",
   "background_color": "#2196f3",
   "display": "standalone",

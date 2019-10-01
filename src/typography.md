@@ -1,6 +1,6 @@
 ---
-title: Style Guide - Typography
-metadesc: Typography style guide for app
+title: Markdown-It Tests
+metadesc: Markdown tests for app
 layout: blog
 ---
 
@@ -24,6 +24,14 @@ This is some body text. Eiusmod Lorem elit ullamco culpa enim duis non magna. Ni
 
 This is some alternative body text. Eiusmod incididunt excepteur velit qui amet id voluptate cupidatat. Voluptate exercitation incididunt aute pariatur pariatur deserunt minim proident consequat. Excepteur dolore excepteur elit ad mollit enim proident ullamco irure dolore in occaecat. Magna dolor laboris tempor cupidatat fugiat tempor adipisicing cillum adipisicing dolor consequat consectetur ipsum nisi. Et reprehenderit cillum culpa ut irure mollit occaecat nulla nulla sint aute quis nostrud duis. {.body--alt}
 
+This Is A Thing
+
+: And it's definition
+
+And Another Thing with _inline markup_
+
+: And it's got a definition too
+
 !!! button
 Button Text
 !!!
@@ -43,3 +51,11 @@ Button Text
 Caption Text {.caption}
 
 Overline Text {.overline}
+
+```js
+let foo = 'Hello World';
+const log = arg => {
+  console.log(arg);
+};
+log(foo);
+```

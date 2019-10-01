@@ -1,0 +1,6 @@
+[
+  {
+    "action": "remove",
+    "files": [".github", "CODE_OF_CONDUCT.md", ".npmrc"]
+  }
+]

@@ -1,32 +1,33 @@
 {
   "name": "my-awesome-site",
   "version": "1.0.0",
-  "description": "My awesome site",
-  "main": "index.js",
+  "description": "My awesome site, built on Chrome OS's static site scaffold",
+  "main": "src/js/main.js",
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "license": "Apache-2.0",
   "scripts": {
+    "prestart": "del public",
+    "start": "run-s dev",
+    "prebuild": "del public",
+    "build": "NODE_ENV=production run-p js static",
     "pretest": "run-p test:lint build",
-    "test:lint": "eslint tests",
     "test": "nyc ava",
     "posttest": "ava tests/lighthouse.js",
+    "server": "gulp dev",
+    "dev": "run-p compile:watch server js:watch",
+    "compile": "eleventy",
+    "compile:watch": "eleventy --watch",
     "js": "rollup -c",
     "js:lint": "eslint src gulpfile.js rollup.config.js",
     "js:watch": "rollup -c -w",
     "sass": "gulp sass",
-    "lint": "NODE_ENV=production run-p test:lint js:lint sass",
-    "compile": "eleventy",
-    "compile:watch": "eleventy --watch",
-    "server": "gulp dev",
-    "dev": "run-p compile:watch server js:watch",
     "build:static": "gulp build",
     "static": "run-s compile build:static",
-    "prebuild": "del public",
-    "build": "NODE_ENV=production run-p js static",
-    "gulp": "gulp",
-    "test:server": "http-server public",
-    "test:lighthouse": "lighthouse http://localhost:8080",
-    "lighthouse": "run-p test:server test:lighthouse",
-    "prestart": "del public",
-    "start": "run-s dev"
+    "lint": "NODE_ENV=production run-p test:lint js:lint sass",
+    "test:lint": "eslint tests",
+    "gulp": "gulp"
   },
   "ava": {
     "files": [
@@ -42,44 +43,41 @@
       "esm"
     ]
   },
+  "nyc": {
+    "include": [
+      "src/js/**/*.js"
+    ],
+    "all": true
+  },
   "husky": {
     "hooks": {
       "pre-commit": "run-s lint"
     }
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "ava": "^2.3.0",
-    "babel-plugin-minify-mangle-names": "^0.5.0",
-    "babel-preset-minify": "^0.5.1",
-    "babel-register": "^6.26.0",
-    "breakpoint-sass": "^2.7.1",
+    "ava": "^2.4.0",
     "chrome-launcher": "^0.11.2",
     "del-cli": "^2.0.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.5.1",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-ava": "^8.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "gulp": "^4.0.2",
-    "http-server": "^0.11.1",
-    "husky": "^3.0.5",
-    "lighthouse": "^5.2.0",
+    "husky": "^3.0.7",
+    "lighthouse": "^5.4.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
-    "puppeteer": "^1.19.0",
-    "rollup": "^1.19.4",
-    "sass-toolkit": "^2.10.2",
-    "sinon": "^7.4.2"
+    "rollup": "^1.22.0",
+    "sinon": "^7.5.0"
   },
   "dependencies": {
     "@11ty/eleventy": "^0.8.3",
-    "static-site-scaffold": "^0.2.0"
-  }
+    "static-site-scaffold": "^0.2.1"
+  },
+  "private": true
 }

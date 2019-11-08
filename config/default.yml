@@ -1,6 +1,6 @@
 # Shared Folders
 folders:
-  source: src
+  input: src
   output: public
   includes: _components
   layouts: _layouts

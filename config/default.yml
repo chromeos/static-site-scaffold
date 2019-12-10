@@ -11,10 +11,15 @@ assets:
   videos: videos
   fonts: fonts
 
+# JavaScript Input/Output Config
+#   output: input
+#     output - Output file (no extension)
+#     input - Input file (with extension) from folders.source
 javascript:
-  files:
-    # Output file (no extension): input file from folders.source
+  esm:
     js/main: js/main.js
+  iife:
+    sw: sw.js
 
 # Sass Config
 sass:

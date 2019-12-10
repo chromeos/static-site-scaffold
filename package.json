@@ -75,6 +75,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "js-yaml": "^3.13.1",
     "lazypipe": "^1.0.2",
+    "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^9.1.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-attrs": "^3.0.1",

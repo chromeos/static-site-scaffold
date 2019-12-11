@@ -7,8 +7,8 @@ plugins:
   - import
   - prettier
 env:
-  browser: true
-  node: false
+  browser: false
+  node: true
 parserOptions:
   parser: babel-eslint
   ecmaVersion: 2017

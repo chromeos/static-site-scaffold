@@ -13,10 +13,11 @@ test('ESM exported correctly', t => {
 
 test('IIFE exported correctly', t => {
   // IIFEs
-  rollup.iifes.forEach(iife => {
-    const i = iife.input;
-    t.true(Object.keys(config.javascript.iife).includes(i));
-    t.is(iife.output.name, config.javascript.iife[i]);
+  rollup.iifes.forEach((iife, i) => {
+    const input = path.join(config.folders.input, Object.values(config.javascript.iife)[i]);
+    const output = Object.keys(config.javascript.iife)[i];
+    t.is(iife.output.name, output);
+    t.is(iife.input, input);
     t.is(iife.output.format, 'iife');
   });
 });

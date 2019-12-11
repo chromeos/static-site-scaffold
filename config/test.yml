@@ -19,7 +19,7 @@ javascript:
   esm:
     js/main: js/main.js
   iife:
-    sw: sw.js
+    test/iffe: iffe.js
 
 # Sass Config
 sass:
@@ -29,7 +29,7 @@ sass:
   config:
     outputStyle: compressed
 
-# Service Worker and Manifest config
+# Service Worker Config
 serviceWorker:
   src: sw.js
   dest: sw.js
@@ -37,6 +37,8 @@ serviceWorker:
     - css/**/*.css
     - js/**/*.js
     - index.html
+
+# Manifest config
 manifest:
   src: manifest.json
   dest: manifest.json

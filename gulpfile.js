@@ -64,7 +64,7 @@ function watchFonts() {
  * @return {object} Gulp watch object
  */
 function watchPWA() {
-  return gulp.watch(['./src/manifest.json', './src/sw.js'], scaffold.pwa);
+  return gulp.watch(['./src/manifest.json'], scaffold.pwa);
 }
 
 gulp.task('server', gulp.parallel(scaffold.server, scaffold.external));

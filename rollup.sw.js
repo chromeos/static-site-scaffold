@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /* eslint-env node */
-const { default: scaffold } = require('static-site-scaffold/lib/rollup.config');
+const config = require('static-site-scaffold/lib/rollup.sw');
 
-export default scaffold;
+export default config;

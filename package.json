@@ -11,24 +11,59 @@
     "prestart": "del public",
     "start": "run-s dev",
     "prebuild": "del public",
-    "build": "NODE_ENV=production run-p js static",
+    "build": "better-npm-run build",
+    "postbuild": "better-npm-run postbuild",
     "pretest": "run-s test:lint",
     "test": "nyc ava",
     "test:lighthouse": "ava tests/lighthouse.js",
     "posttest": "run-s build test:lighthouse",
     "server": "gulp dev",
-    "dev": "run-p compile:watch server js:watch",
-    "compile": "eleventy",
-    "compile:watch": "eleventy --watch",
+    "dev": "better-npm-run dev",
+    "compile": "better-npm-run compile",
+    "compile:watch": "run-s 'compile -- --watch'",
     "js": "rollup -c",
-    "js:lint": "eslint src gulpfile.js rollup.config.js",
-    "js:watch": "rollup -c -w",
+    "js:sw": "rollup -c rollup.sw.js",
+    "js:lint": "eslint src gulpfile.js rollup.config.js rollup.sw.js",
+    "js:watch": "run-p 'js -- -w' 'js:sw -- -w'",
     "sass": "gulp sass",
     "build:static": "gulp build",
     "static": "run-s compile build:static",
-    "lint": "NODE_ENV=production run-p test:lint js:lint sass",
+    "lint": "better-npm-run lint",
     "test:lint": "eslint tests",
     "gulp": "gulp"
+  },
+  "betterScripts": {
+    "build": {
+      "command": "run-p js static",
+      "env": {
+        "NODE_ENV": "production",
+        "NODE_ICU_DATA": "node_modules/full-icu"
+      }
+    },
+    "postbuild": {
+      "command": "run-s js:sw",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "dev": {
+      "command": "run-p *:watch server",
+      "env": {
+        "NODE_ICU_DATA": "node_modules/full-icu"
+      }
+    },
+    "compile": {
+      "command": "eleventy",
+      "env": {
+        "NODE_ICU_DATA": "node_modules/full-icu"
+      }
+    },
+    "lint": {
+      "command": "run-p *:lint sass",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
   },
   "ava": {
     "files": [
@@ -57,6 +92,7 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
+    "better-npm-run": "^0.1.1",
     "chrome-launcher": "^0.11.2",
     "del-cli": "^2.0.0",
     "eslint": "^6.5.1",
@@ -67,6 +103,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "fs-extra": "^8.1.0",
     "gulp": "^4.0.2",
     "husky": "^3.0.7",
     "lighthouse": "^5.4.0",
@@ -78,7 +115,9 @@
   },
   "dependencies": {
     "@11ty/eleventy": "^0.8.3",
-    "static-site-scaffold": "^1.0.1"
+    "full-icu": "^1.3.0",
+    "idb-keyval": "^3.2.0",
+    "iso-639-1": "^2.1.0",
     "static-site-scaffold": "^2.1.0"
   },
   "private": true

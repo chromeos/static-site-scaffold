@@ -1,7 +1,15 @@
 {
   "hosting": {
     "predeploy": "npm run build",
+    "trailingSlash": false,
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/en",
+        "type": 301
+      }
+    ],
     "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "src/**", "tests/**", "lib/**", "gulpfile.js", "rollup.config.js", "babel.config.js", "package*.json"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "src/**", "tests/**", "lib/**", "gulpfile.js", "rollup.*.js", "babel.config.js", "package*.json"]
   }
 }

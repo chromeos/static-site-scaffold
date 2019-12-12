@@ -12,6 +12,29 @@ npx degit chromeos/static-site-scaffold my-awesome-site
 
 This will download the latest version of the scaffolding files and put them into a new folder `my-awesome-site`. You should then `cd` into that folder, `git init` it to enable version control, and run `npm install`, or equivalent.
 
+## Internationalization and Localization
+
+Static Site Scaffold has basic internationalization (i18n) in place by default, allowing sites to be fully localized (l10n). This means that, out-of-the-box, you're set up to build multi-lingual sites without additional configuration needed and, if you don't need it, it's straight forward to remove.
+
+In order to create a localization, first create a folder named after the [ISO 639-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for the language you want to include, and in that folder, create a JSON file of the same name that includes that ISO language code (`code`) and writing direction (`dir`) inside a `locale` object. For English, it would look like the following:
+
+```json
+{
+  "locale": {
+    "code": "en",
+    "dir": "ltr"
+  }
+}
+```
+
+This will add a `locale` global variable to each page inside that folder with the correct localization information, which you can then use as needed. This will also cascade into layouts, allowing this localization information to be used throughout your site.
+
+From there, you have two options for making localized pages: translating individual pages or generating pages from data. The former is fairly straight-forward, it's like managing any other data you may have, or you can use a tool like [GitLocalize](https://gitlocalize.com/) to assist in managing translations for you. For the later, you would use [Eleventy's pagination](https://www.11ty.dev/docs/pagination/) to generate pages based on input date. See `src/_generated/index.html` for an example that loops over all of the data in the `l10n` global data object (which contains all data from all locale JSON files) and generates a language-specific landing page for each language. In addition, the following filters have been included to make localization and internationalization easier:
+
+- `date(locale = 'en', format = {})` - Localizes a given date. In the simplest usecase, you can use it as `{{ published | date(locale.code)}}`. Format is an object corrisponding to the options for [`toLocaleDateString()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString)
+- `localeURL(locale)` - Transforms a passed in URL, like Eleventy's `page.url` global, into a localized version based on the folder structure localization pattern. Simple usage would be `{{page.url | localeURL(locale.code)}}`
+- `langName` - Return the ISO 639-1 language name, in the native language, for the given locale code. Simple usage would be `{{locale.code | langName}}`
+
 ## Folder Structure
 
 ```

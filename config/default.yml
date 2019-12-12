@@ -4,6 +4,7 @@ folders:
   output: public
   includes: _components
   layouts: _layouts
+  data: _data
 
 # Static Asset Folders
 assets:
@@ -35,7 +36,6 @@ serviceWorker:
   pattern:
     - css/**/*.css
     - js/**/*.js
-    - index.html
 
 # Manifest config
 manifest:

@@ -1,8 +1,8 @@
-{% macro nav() %}
+{% macro nav(locale, ssi = true) %} {% if ssi %}<!--#include virtual="/components/{{locale}}/nav.txt"-->{% endif %}
 <nav>
   <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/typography">Typography</a></li>
+    <li><a href="/{{locale}}">Home</a></li>
+    <li><a href="/{{locale}}/typography">Typography</a></li>
   </ul>
 </nav>
-{% endmacro %}
+{% if ssi %}<!--#endinclude-->{% endif %} {% endmacro %}

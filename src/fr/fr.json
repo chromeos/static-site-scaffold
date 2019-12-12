@@ -1,0 +1,10 @@
+{
+  "locale": {
+    "code": "fr",
+    "dir": "ltr"
+  },
+  "landing": {
+    "title": "Bonjour le monde"
+  },
+  "fourOhFour": "Page non trouvée"
+}

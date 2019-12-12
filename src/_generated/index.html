@@ -1,0 +1,18 @@
+---
+layout: _wrapper
+pagination:
+  data: l10n
+  size: 1
+  alias: l10n
+permalink: '{{ l10n.locale.code | slug }}/'
+renderData:
+  locale:
+    code: '{{l10n.locale.code}}'
+    dir: '{{l10n.locale.dir}}'
+  metadesc: '{{l10n.landing.description}}'
+  title: '{{landil10nng.landing.title}}'
+---
+
+<p>Locale {{renderData.locale.code}} {{renderData.locale.direction}}</p>
+
+<p>Language {{ l10n.locale.code | langName }} {{l10n.locale.code}}</p>

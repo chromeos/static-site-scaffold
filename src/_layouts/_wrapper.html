@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+{# Set Globals #} {% if renderData.locale %} {% set locale = renderData.locale %} {% endif %} {% if renderData.metadesc %} {% set metadesc = renderData.metadesc %} {% endif %} {% if renderData.title %} {% set title = renderData.title %} {% endif %} {# End Globals #}
+<html lang="{{locale.code}}" dir="{{locale.dir}}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,14 +8,22 @@
 
     <meta name="Description" content="{{ metadesc }}" />
 
+    {% for lang in site.languages %} {%if lang !== locale.code %}
+    <link rel="alternate" hreflang="{{lang}}" href="{{page.url | localURL(lang)}}" />
+    {% endif %} {% endfor %}
+
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/css/style.css" />
     <script type="module" defer src="/js/main.js"></script>
     <title>{{ title }}</title>
   </head>
   <body>
-    {% from 'nav.html' import nav %}
-    {{ nav() }}
+    {% from 'nav.html' import nav %} {{ nav(locale.code) }}
+    <select name="lang" id="lang">
+      {% for lang in site.languages %}
+      <option value="{{lang}}" {% if lang === locale.code %}selected{% endif %}>{{lang | langName}}</option>
+      {% endfor %}
+    </select>
     {{ content | safe }}
   </body>
 </html>

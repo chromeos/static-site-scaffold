@@ -2,5 +2,5 @@
 layout: _wrapper
 ---
 
-<h1>{{ title }}</h1>
+<h1>{{ title }} - {{published | date(locale.code) }}</h1>
 {{ content | safe }}

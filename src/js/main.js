@@ -13,7 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { log } from './log';
+import { log } from './lib/log';
+import { preferences } from './lib/db';
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const lang = document.querySelector('#lang');
+
+  // Set default language if no language is set
+  const language = await preferences.get('lang');
+  if (language === undefined) {
+    preferences.set('lang', lang.value);
+  }
+
+  // Redirect user if language is changed
+  lang.addEventListener('change', e => {
+    preferences.set('lang', e.target.value);
+    window.location = document.querySelector(`link[rel="alternate"][hreflang="${e.target.value}"]`).href;
+  });
+});
 
 // eslint-disable-next-line no-constant-condition
 if ('serviceWorker' in navigator && PRODUCTION) {

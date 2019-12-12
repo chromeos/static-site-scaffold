@@ -1,6 +1,6 @@
 # Shared Folders
 folders:
-  source: src
+  input: src
   output: public
   includes: _components
   layouts: _layouts
@@ -11,10 +11,15 @@ assets:
   videos: videos
   fonts: fonts
 
+# JavaScript Input/Output Config
+#   output: input
+#     output - Output file (no extension)
+#     input - Input file (with extension) from folders.source
 javascript:
-  files:
-    # Output file (no extension): input file from folders.source
+  esm:
     js/main: js/main.js
+  iife:
+    test/iffe: iffe.js
 
 # Sass Config
 sass:
@@ -24,7 +29,7 @@ sass:
   config:
     outputStyle: compressed
 
-# Service Worker and Manifest config
+# Service Worker Config
 serviceWorker:
   src: sw.js
   dest: sw.js
@@ -32,6 +37,8 @@ serviceWorker:
     - css/**/*.css
     - js/**/*.js
     - index.html
+
+# Manifest config
 manifest:
   src: manifest.json
   dest: manifest.json

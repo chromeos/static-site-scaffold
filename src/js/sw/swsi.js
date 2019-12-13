@@ -43,6 +43,10 @@ const endIncludeWithLeadingRegExp = /[\s\S]*<!--\s*#endinclude\s*-->/gm;
  * @param {response} param0 - The response from the cache
  */
 async function serviceWorkerSideInclude({ cachedResponse }) {
+  if (!cachedResponse) {
+    return null;
+  }
+
   const content = await cachedResponse.text();
   const matches = [...new Set(content.match(includesRegExp))];
   const neededIncludes = await Promise.all(

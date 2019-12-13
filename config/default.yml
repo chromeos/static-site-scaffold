@@ -36,6 +36,7 @@ serviceWorker:
   pattern:
     - css/**/*.css
     - js/**/*.js
+    - _components/**/*.txt
 
 # Manifest config
 manifest:

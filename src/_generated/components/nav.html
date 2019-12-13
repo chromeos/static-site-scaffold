@@ -1,0 +1,9 @@
+---
+pagination:
+  data: l10n
+  size: 1
+  alias: l10n
+permalink: '_components/{{ l10n.locale.code | slug }}/nav.txt'
+---
+
+{% from 'nav.html' import nav %} {{ nav(l10n.locale.code, false) }}

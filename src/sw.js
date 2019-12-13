@@ -131,7 +131,12 @@ precacheAndRoute(self.__WB_MANIFEST);
 // HTML caching strategy
 const htmlStrategy = new StaleWhileRevalidate({
   cacheName: 'pages-cache',
-  plugins: [navigationNormalizationPlugin],
+  plugins: [
+    navigationNormalizationPlugin,
+    new CacheableResponsePlugin({
+      statuses: [200, 301, 404],
+    }),
+  ],
 });
 
 /**

@@ -34,60 +34,52 @@ importScripts('/js/languages.js');
  * @return {request} Either the original request or a normalized request
  */
 async function normalizeIfNeeded({ request }) {
-  // Clean out query parameters
+  // Clean out query parameters, and add a trailing '/' if missing.
   const url = new URL(request.url);
-  const clean = url.origin + url.pathname;
-
-  if (request.mode === 'navigate' && !clean.endsWith('/')) {
-    return new Request(`${clean}/`);
+  let cleanUrl = url.origin + url.pathname;
+  if (!cleanUrl.endsWith('/')) {
+    cleanUrl += '/';
   }
-  return new Request(clean);
+  return new Request(cleanUrl);
 }
 
 const includesRegExp = /(<!--\s*#include\s*virtual=['|"]\S*['|"]-->)/gm;
 const includesFileRegExp = /<!--\s*#include\s*virtual=['|"](\S*)['|"]-->/gm;
 const endIncludeRegExp = /<!--\s*#endinclude\s*-->/gm;
 const endIncludeWithLeadingRegExp = /[\s\S]*<!--\s*#endinclude\s*-->/gm;
-const hasFileEnding = /\.(\w*)$/g;
 
 /**
  *
  * @param {response} param0 - The response from the cache
  */
 async function serviceWorkerSideInclude({ cachedResponse }) {
-  const isHTML = cachedResponse.headers.get('content-type').indexOf('text/html;') === 0;
-  if (isHTML) {
-    console.log('True');
-    const content = await cachedResponse.text();
-    const matches = [...new Set(content.match(includesRegExp))];
-    const neededIncludes = await Promise.all(
-      matches
-        .map(i => i.split(includesFileRegExp)[1])
-        .map(async key => {
-          const cachedInclude = await matchPrecache(key);
-          return cachedInclude.text();
-        }),
-    );
+  const content = await cachedResponse.text();
+  const matches = [...new Set(content.match(includesRegExp))];
+  const neededIncludes = await Promise.all(
+    matches
+      .map(i => i.split(includesFileRegExp)[1])
+      .map(async key => {
+        const cachedInclude = await matchPrecache(key);
+        return cachedInclude.text();
+      }),
+  );
 
-    const includes = {};
+  const includes = {};
 
-    matches.forEach((include, i) => (includes[include] = neededIncludes[i]));
+  matches.forEach((include, i) => (includes[include] = neededIncludes[i]));
 
-    const rebuild = content
-      .split(includesRegExp)
-      .map(i => {
-        if (matches.includes(i)) {
-          return includes[i];
-        }
+  const rebuild = content
+    .split(includesRegExp)
+    .map(i => {
+      if (matches.includes(i)) {
+        return includes[i];
+      }
 
-        return i;
-      })
-      .join('');
+      return i;
+    })
+    .join('');
 
-    return new Response(rebuild, { headers: cachedResponse.headers });
-  }
-
-  return cachedResponse;
+  return new Response(rebuild, { headers: cachedResponse.headers });
 }
 
 /**
@@ -95,41 +87,36 @@ async function serviceWorkerSideInclude({ cachedResponse }) {
  * @param {response} param0 - The response that will update the cache
  */
 async function swsiSideCleanup({ response }) {
-  const isHTML = response.headers.get('content-type').indexOf('text/html;') === 0;
-  if (isHTML) {
-    const content = await response.text();
+  const content = await response.text();
 
-    const matches = content.match(includesRegExp);
-    // const neededIncludes = [...new Set(matches)].map(i => i.split(includesFileRegExp)[1]);
-    let open = 0;
-    const rebuild = content
-      .split(includesRegExp)
-      .map(i => {
-        // If the current item is the include and it's not included from within
-        if (i === matches[0]) {
-          matches.shift();
-          open++;
-          if (open > 1) return '';
-          return i;
-        }
+  const matches = content.match(includesRegExp);
+  // const neededIncludes = [...new Set(matches)].map(i => i.split(includesFileRegExp)[1]);
+  let open = 0;
+  const rebuild = content
+    .split(includesRegExp)
+    .map(i => {
+      // If the current item is the include and it's not included from within
+      if (i === matches[0]) {
+        matches.shift();
+        open++;
+        if (open > 1) return '';
+        return i;
+      }
 
-        const endIncludeSplit = i.split(endIncludeWithLeadingRegExp);
-        if (endIncludeSplit.length === 1 && open !== 0) {
-          return '';
-        }
+      const endIncludeSplit = i.split(endIncludeWithLeadingRegExp);
+      if (endIncludeSplit.length === 1 && open !== 0) {
+        return '';
+      }
 
-        const count = i.match(endIncludeRegExp);
+      const count = i.match(endIncludeRegExp);
 
-        open = open - (count ? count.length : 0);
+      open = open - (count ? count.length : 0);
 
-        return endIncludeSplit.join('');
-      })
-      .join('');
+      return endIncludeSplit.join('');
+    })
+    .join('');
 
-    const result = new Response(rebuild, { headers: response.headers });
-
-    return result;
-  }
+  return new Response(rebuild, { headers: response.headers });
 }
 
 const navigationNormalizationPlugin = {
@@ -141,84 +128,13 @@ const navigationNormalizationPlugin = {
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
-registerRoute(
-  /^https:\/\/fonts\.googleapis\.com/,
-  new StaleWhileRevalidate({
-    cacheName: 'google-fonts-stylesheets',
-  }),
-);
-
-// Cache the underlying font files with a cache-first strategy for 1 year.
-registerRoute(
-  /^https:\/\/fonts\.gstatic\.com/,
-  new CacheFirst({
-    cacheName: 'google-fonts-webfonts',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxAgeSeconds: 60 * 60 * 24 * 365,
-        maxEntries: 30,
-      }),
-    ],
-  }),
-);
-
-// Images
-registerRoute(
-  /(.*)images(.*)\.(?:png|gif|jpg)/,
-  new CacheFirst({
-    cacheName: 'images-cache',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      }),
-    ],
-  }),
-);
-
-// HTML
-registerRoute(({ url }) => url.pathname.match(hasFileEnding) === null, htmlHandler);
-
-setCatchHandler(({ event }) => {
-  // The FALLBACK_URL entries must be added to the cache ahead of time, either via runtime
-  // or precaching.
-  // If they are precached, then call matchPrecache(FALLBACK_URL).
-  //
-  // Use event, request, and url to figure out how to respond.
-  // One approach would be to use request.destination, see
-  // https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c
-  switch (event.request.destination) {
-    case 'document':
-      return caches.match('/404');
-
-    // case 'image':
-    //   return matchPrecache(FALLBACK_IMAGE_URL);
-    // break;
-
-    // case 'font':
-    //   return matchPrecache(FALLBACK_FONT_URL);
-    // break;
-
-    default:
-      // If we don't have a fallback, just return an error response.
-      return Response.error();
-  }
-});
-
 // HTML caching strategy
 const htmlStrategy = new StaleWhileRevalidate({
   cacheName: 'pages-cache',
   plugins: [
     navigationNormalizationPlugin,
     new CacheableResponsePlugin({
-      headers: {
-        'Content-Type': 'text/html; charset=UTF-8',
-      },
-      statuses: [200, 301, 404, 0],
+      statuses: [200, 301, 404],
     }),
   ],
 });
@@ -245,9 +161,73 @@ async function htmlHandler({ event }) {
     return Response.redirect(redirectURL, 302);
   }
 
-  try {
-    return await htmlStrategy.makeRequest({ request });
-  } catch (error) {
-    return caches.match('/404/');
-  }
+  return htmlStrategy.handle({ event, request });
 }
+
+// Handle navigation requests with htmlHandler.
+registerRoute(({ request }) => request.mode === 'navigate', htmlHandler);
+
+// Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
+registerRoute(
+  ({ request }) => request.destination === 'style',
+  new StaleWhileRevalidate({
+    cacheName: 'stylesheets',
+  }),
+);
+
+// Cache the underlying font files with a cache-first strategy for 1 year.
+registerRoute(
+  ({ request }) => request.destination === 'font',
+  new CacheFirst({
+    cacheName: 'webfonts',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxAgeSeconds: 60 * 60 * 24 * 365,
+        maxEntries: 30,
+      }),
+    ],
+  }),
+);
+
+// Images
+registerRoute(
+  ({ request }) => request.destination === 'image',
+  new CacheFirst({
+    cacheName: 'images-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+      }),
+    ],
+  }),
+);
+
+setCatchHandler(({ event }) => {
+  // The FALLBACK_URL entries must be added to the cache ahead of time, either via runtime
+  // or precaching.
+  // If they are precached, then call matchPrecache(FALLBACK_URL).
+  //
+  // Use event, request, and url to figure out how to respond.
+  // One approach would be to use request.destination, see
+  // https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c
+  switch (event.request.destination) {
+    case 'document':
+      return caches.match('/404/');
+
+    // case 'image':
+    //   return matchPrecache(FALLBACK_IMAGE_URL);
+    // break;
+
+    // case 'font':
+    //   return matchPrecache(FALLBACK_FONT_URL);
+    // break;
+
+    default:
+      // If we don't have a fallback, just return an error response.
+      return Response.error();
+  }
+});

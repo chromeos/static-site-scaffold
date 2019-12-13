@@ -9,7 +9,7 @@
     <meta name="Description" content="{{ metadesc }}" />
 
     {% for lang in site.languages %} {%if lang !== locale.code %}
-    <link rel="alternate" hreflang="{{lang}}" href="{{page.url | localURL(lang)}}" />
+    <link rel="alternate" hreflang="{{lang}}" href="{{page.url | localeURL(lang)}}" />
     {% endif %} {% endfor %}
 
     <link rel="manifest" href="/manifest.json" />

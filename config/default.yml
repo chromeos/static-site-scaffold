@@ -2,8 +2,8 @@
 folders:
   input: src
   output: public
-  includes: _components
-  layouts: _layouts
+  includes: ../templates/_components
+  layouts: ../templates/_layouts
   data: _data
 
 # Static Asset Folders

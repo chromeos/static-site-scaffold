@@ -216,7 +216,7 @@ setCatchHandler(({ event }) => {
   // https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c
   switch (event.request.destination) {
     case 'document':
-      return caches.match('/404');
+      return caches.match('/404/');
 
     // case 'image':
     //   return matchPrecache(FALLBACK_IMAGE_URL);

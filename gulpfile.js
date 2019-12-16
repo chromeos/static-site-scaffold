@@ -16,6 +16,8 @@
 /* eslint-env node */
 const gulp = require('gulp');
 const scaffold = require('static-site-scaffold/lib/gulp.config')(gulp);
+const { assets, sass } = require('config');
+const { buildSrcDest } = require('static-site-scaffold/lib/gulp/assets');
 
 /**
  * Watches a Sass glob and runs compileSass
@@ -23,7 +25,8 @@ const scaffold = require('static-site-scaffold/lib/gulp.config')(gulp);
  * @return {object} Gulp watch object
  */
 function watchSass() {
-  return gulp.watch('./src/sass/**/*.scss', scaffold.sass);
+  const { src } = buildSrcDest(sass);
+  return gulp.watch(src, scaffold.sass);
 }
 
 gulp.task('sass', scaffold.sass);
@@ -37,7 +40,8 @@ gulp.task('watch:sass', gulp.parallel(scaffold.sass, watchSass));
  * @return {object} Gulp watch object
  */
 function watchImages() {
-  return gulp.watch('./src/images/**/*', scaffold.images);
+  const { src } = buildSrcDest(assets.images);
+  return gulp.watch(src, scaffold.images);
 }
 
 /**
@@ -46,7 +50,8 @@ function watchImages() {
  * @return {object} Gulp watch object
  */
 function watchVideos() {
-  return gulp.watch('./src/videos/**/*', scaffold.videos);
+  const { src } = buildSrcDest(assets.videos);
+  return gulp.watch(src, scaffold.videos);
 }
 
 /**
@@ -55,21 +60,23 @@ function watchVideos() {
  * @return {object} Gulp watch object
  */
 function watchFonts() {
-  return gulp.watch('./src/fonts/**/*', scaffold.fonts);
+  const { src } = buildSrcDest(assets.fonts);
+  return gulp.watch(src, scaffold.fonts);
 }
 
 /**
- * Watches manifest and service worker and runs movePWA
+ * Watches manifest runs moveManifest
  *
  * @return {object} Gulp watch object
  */
-function watchPWA() {
-  return gulp.watch(['./src/manifest.json'], scaffold.pwa);
+function watchManifest() {
+  const { src } = buildSrcDest(assets.manifest);
+  return gulp.watch(src, scaffold.manifest);
 }
 
 gulp.task('server', gulp.parallel(scaffold.server, scaffold.external));
-gulp.task('build:static', gulp.parallel(scaffold.images, scaffold.videos, scaffold.fonts, scaffold.pwa));
-gulp.task('watch:static', gulp.parallel(watchImages, watchVideos, watchFonts, watchPWA));
+gulp.task('build:static', gulp.parallel(scaffold.images, scaffold.videos, scaffold.fonts, scaffold.manifest, scaffold.sass));
+gulp.task('watch:static', gulp.parallel(watchImages, watchVideos, watchFonts, watchManifest));
 
 // ////////////////////////////
 // Pipelines

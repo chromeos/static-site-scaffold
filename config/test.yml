@@ -1,15 +1,11 @@
 # Shared Folders
 folders:
-  input: src
-  output: public
-  includes: _components
-  layouts: _layouts
-
-# Static Asset Folders
-assets:
-  images: images
-  videos: videos
-  fonts: fonts
+  source: src # Asset, JavaScript, Service Worker, and Sass source folder
+  pages: views # HTML source, relative to project root
+  templates: templates # HTML templates, relative to project root
+  includes: _components # HTML includes, relative to template directory
+  layouts: _layouts # HTML layouts, relative to template directory
+  output: public # Output folder for all files
 
 # JavaScript Input/Output Config
 #   output: input
@@ -19,7 +15,15 @@ javascript:
   esm:
     js/main: js/main.js
   iife:
-    test/iffe: iffe.js
+
+# Service Worker Config
+serviceWorker:
+  src: sw.js
+  dest: sw.js
+  precache: # Glob patterns to precache when Service Worker is installed
+    - css/**/*.css
+    - js/**/*.js
+    - _components/**/*.txt
 
 # Sass Config
 sass:
@@ -29,19 +33,20 @@ sass:
   config:
     outputStyle: compressed
 
-# Service Worker Config
-serviceWorker:
-  src: sw.js
-  dest: sw.js
-  pattern:
-    - css/**/*.css
-    - js/**/*.js
-    - index.html
-
-# Manifest config
-manifest:
-  src: manifest.json
-  dest: manifest.json
+# Static Asset Folders
+assets:
+  images:
+    src: images/**/*
+    dest: images
+  videos:
+    src: videos/**/*
+    dest: videos
+  fonts:
+    src: fonts/**/*
+    dest: fonts
+  manifest:
+    src: manifest.json
+    dest: manifest.json
 
 # HTML Optimization
 optimize:

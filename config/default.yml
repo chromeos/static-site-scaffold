@@ -49,7 +49,11 @@ assets:
     dest: ''
 
 # HTML Optimization
+#   src is relative to the _output_ folder, not the pages or source folder.
 optimize:
+  src:
+    - '**/*.html'
+    - '**/*.txt'
   critical:
     inline: true
     minify: true

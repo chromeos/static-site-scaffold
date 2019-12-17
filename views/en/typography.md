@@ -2,6 +2,7 @@
 title: Markdown-It Tests
 metadesc: Markdown tests for app
 layout: blog
+published: December 1, 2019
 ---
 
 # Headline 1
@@ -26,11 +27,11 @@ This is some alternative body text. Eiusmod incididunt excepteur velit qui amet 
 
 This Is A Thing
 
-: And it's definition
+: And its definition
 
-And Another Thing with _inline markup_
+And another thing with _inline markup_
 
-: And it's got a definition too
+: And its got a definition too
 
 !!! button
 Button Text

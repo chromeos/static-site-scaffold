@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 /* eslint-env node */
-const { default: scaffold } = require('static-site-scaffold/lib/rollup.config');
+const { languages } = require('./site');
+const path = require('path');
 
-export default scaffold;
+const landings = languages.map(l => require(path.join(__dirname, '..', l, `${l}.json`)));
+
+module.exports = landings;

@@ -1,0 +1,11 @@
+{
+  "locale": {
+    "code": "en",
+    "dir": "ltr"
+  },
+  "landing": {
+    "title": "Hello World",
+    "description": "This is a description"
+  },
+  "fourOhFour": "Page Not Found"
+}

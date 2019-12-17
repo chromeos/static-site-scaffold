@@ -17,7 +17,7 @@
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 import { preferences } from '../lib/db.js';
-import { navigationNormalizationPlugin } from './swsi.js';
+import { navigationNormalizationPlugin } from './swi.js';
 
 importScripts('/js/languages.js');
 

@@ -39,10 +39,11 @@ const endIncludeRegExp = /<!--\s*#endinclude\s*-->/gm;
 const endIncludeWithLeadingRegExp = /[\s\S]*<!--\s*#endinclude\s*-->/gm;
 
 /**
+ * Takes a cached response and replaces includes with precached items
  *
  * @param {response} param0 - The response from the cache
  */
-async function serviceWorkerSideInclude({ cachedResponse }) {
+async function serviceWorkerInclude({ cachedResponse }) {
   if (!cachedResponse) {
     return null;
   }
@@ -77,10 +78,11 @@ async function serviceWorkerSideInclude({ cachedResponse }) {
 }
 
 /**
+ * Removes service worker includes before saving items to cache
  *
  * @param {response} param0 - The response that will update the cache
  */
-async function swsiSideCleanup({ response }) {
+async function swiCleanup({ response }) {
   const content = await response.text();
 
   const matches = content.match(includesRegExp);
@@ -116,6 +118,6 @@ async function swsiSideCleanup({ response }) {
 export const navigationNormalizationPlugin = {
   cacheKeyWillBeUsed: normalizeIfNeeded,
   requestWillFetch: normalizeIfNeeded,
-  cachedResponseWillBeUsed: serviceWorkerSideInclude,
-  cacheWillUpdate: swsiSideCleanup,
+  cachedResponseWillBeUsed: serviceWorkerInclude,
+  cacheWillUpdate: swiCleanup,
 };

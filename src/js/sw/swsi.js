@@ -90,7 +90,7 @@ async function swsiSideCleanup({ response }) {
     .split(includesRegExp)
     .map(i => {
       // If the current item is the include and it's not included from within
-      if (i === matches[0]) {
+      if (matches && i === matches[0]) {
         matches.shift();
         open++;
         if (open > 1) return '';

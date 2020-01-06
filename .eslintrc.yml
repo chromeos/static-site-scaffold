@@ -9,6 +9,8 @@ plugins:
 env:
   browser: false
   node: true
+  es6: true
+  es2017: true
 parserOptions:
   parser: babel-eslint
   ecmaVersion: 2017

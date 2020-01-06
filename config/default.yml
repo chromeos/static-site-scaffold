@@ -51,7 +51,9 @@ images:
   lazy: true
   additional:
     - images/icons/**/*
-  watch: images/**/*
+  watch:
+    src: images/**/*
+    dest: images/**/*
 
 # HTML Optimization
 #   src is relative to the _output_ folder, not the pages or source folder.

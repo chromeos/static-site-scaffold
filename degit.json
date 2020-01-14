@@ -1,6 +1,6 @@
 [
   {
     "action": "remove",
-    "files": [".github/**/*.md", "CODE_OF_CONDUCT.md", ".npmrc"]
+    "files": [".github/ISSUE_TEMPLATE", ".github/CONTRIBUTING.md", ".github/pull_request_template.md", "CODE_OF_CONDUCT.md", ".npmrc"]
   }
 ]

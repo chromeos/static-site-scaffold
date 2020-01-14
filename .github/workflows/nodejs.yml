@@ -16,15 +16,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
-        if: |
-          hashFiles('package-lock.json') || hashFiles('npm-shrinkwrap.json')
         run: |
-          npm ci
-      - name: Install
-        if: |
-          !hashFiles('package-lock.json') && !hashFiles('npm-shrinkwrap.json')
+          (test -f "package-lock.json" || test -f "npm-shrinkwrap.json") && npm ci || echo No lockfile, falling back to normal install
+      - name: Install - No Lockfile
         run: |
-          npm install
+          (test -f "package-lock.json" && test ! -f "npm-shrinkwrap.json") && npm install || echo Lockfile present, skipping normal install
       - name: Build and Test
         run: |
           npm run build --if-present

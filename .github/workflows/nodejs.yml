@@ -1,0 +1,85 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Switch Node Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Determine Lockfile
+        id: lockfile
+        run: |
+          if [[ -f "package-lock.json" || -f "npm-shrinkwrap.json" ]]; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+      - name: Install - Lockfile
+        if: steps.lockfile.outputs.exists == 'true'
+        run: |
+          npm ci
+      - name: Install - No Lockfile
+        if: steps.lockfile.outputs.exists == 'false'
+        run: |
+          npm install
+      - name: Build and Test
+        run: |
+          npm run build --if-present
+          npm test
+        env:
+          CI: true
+      - name: Upload built state
+        uses: actions/upload-artifact@v1
+        with:
+          name: site
+          path: public
+
+  lighthouse:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Download compiled site
+        uses: actions/download-artifact@v1
+        with:
+          name: site
+          path: public
+      - name: Lighthouse Audit
+        uses: treosh/lighthouse-ci-action@v2
+        with:
+          configPath: lighthouse.config.json
+  # Uncomment to deploy to GitHub Pages after including a GitHub token in project's secrets
+  # deploy:
+  #   needs: build-test
+  #   runs-on: ubuntu-latest
+  #   if: success() && github.ref == 'refs/heads/master'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+  #     - name: Switch Node Version
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - name: Install
+  #       run: |
+  #         npm ci
+  #     - name: Download compiled site
+  #       uses: actions/download-artifact@v1
+  #       with:
+  #         name: site
+  #         path: public
+  #     - run: touch public/.nojekyll
+  #     - name: Deploy to GitHub Pages
+  #       run: npm run deploy
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GH_TOKEN }}

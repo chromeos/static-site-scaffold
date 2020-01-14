@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
+    <title>{% if title %}{{title}} | {% endif %}Static Site Scaffold</title>
     <meta name="Description" content="{{ metadesc }}" />
+    <meta name="theme-color" content="#2196f3"/>
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
 
     {% for lang in site.languages %} {%if lang !== locale.code %}
     <link rel="alternate" hreflang="{{lang}}" href="{{page.url | localeURL(lang)}}" />
@@ -15,15 +18,18 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/css/style.css" />
     <script type="module" defer src="/js/main.js"></script>
-    <title>{{ title }}</title>
   </head>
   <body>
     {% from 'nav.html' import nav %} {{ nav(locale.code) }}
-    <select name="lang" id="lang">
+    <select name="lang" id="lang" aria-label="Select preferred language">
       {% for lang in site.languages %}
       <option value="{{lang}}" {% if lang === locale.code %}selected{% endif %}>{{lang | langName}}</option>
       {% endfor %}
     </select>
-    {{ content | safe }}
+    <main>
+      {{ content | safe }}
+    </main>
   </body>
 </html>
+
+

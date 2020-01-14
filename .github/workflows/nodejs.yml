@@ -23,7 +23,7 @@ jobs:
           else
             echo "::set-output name=exists::false"
           fi
-      - name: Install
+      - name: Install - Lockfile
         if: steps.lockfile.outputs.exists == 'true'
         run: |
           npm ci
@@ -54,14 +54,10 @@ jobs:
         with:
           name: site
           path: public
-      - name: LS Public
-        run: |
-          ls
-          ls public
       - name: Lighthouse Audit
         uses: treosh/lighthouse-ci-action@v2
         with:
-          configPath: .lighthouserc.json
+          configPath: lighthouse.config.json
   # Uncomment to deploy to GitHub Pages after including a GitHub token in project's secrets
   # deploy:
   #   needs: build-test

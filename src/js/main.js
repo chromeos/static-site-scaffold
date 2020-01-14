@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { log } from './lib/log';
-import { preferences } from './lib/db';
+import { preferences } from 'service-worker-i18n-redirect/preferences';
 
 window.addEventListener('DOMContentLoaded', async () => {
   const lang = document.querySelector('#lang');

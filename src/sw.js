@@ -13,17 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* global importScripts, languages  */
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
-import { htmlHandler } from './js/sw/html-strategy';
+import { i18nHandler } from 'service-worker-i18n-redirect';
+import { preferences } from 'service-worker-i18n-redirect/preferences';
+import { serviceWorkerIncludePlugin } from 'service-worker-includes';
+
+importScripts('/js/languages.js');
 
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Handle navigation requests with htmlHandler.
-registerRoute(({ request }) => request.mode === 'navigate', htmlHandler);
+const htmlCachingStrategy = new StaleWhileRevalidate({
+  cacheName: 'pages-cache',
+  plugins: [
+    serviceWorkerIncludePlugin,
+    new CacheableResponsePlugin({
+      statuses: [200, 301, 404],
+    }),
+  ],
+});
+
+registerRoute(({ request }) => request.mode === 'navigate', i18nHandler(languages, preferences, htmlCachingStrategy));
 
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 registerRoute(

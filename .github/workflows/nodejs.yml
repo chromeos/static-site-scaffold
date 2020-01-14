@@ -28,7 +28,7 @@ jobs:
         run: |
           npm ci
       - name: Install - No Lockfile
-        if: steps.lockfile.outputs.exists == 'true'
+        if: steps.lockfile.outputs.exists == 'false'
         run: |
           npm install
       - name: Build and Test

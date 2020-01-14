@@ -15,12 +15,22 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Determine Lockfile
+        id: lockfile
+        run: |
+          if [ test -f "package-lock.json" || test -f "npm-shrinkwrap.json" ]; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
       - name: Install
+        if: steps.lockfile.outputs.exists == 'true'
         run: |
-          (test -f "package-lock.json" || test -f "npm-shrinkwrap.json") && npm ci || echo No lockfile, falling back to normal install
+          npm ci
       - name: Install - No Lockfile
+        if: steps.lockfile.outputs.exists == 'true'
         run: |
-          (test -f "package-lock.json" && test ! -f "npm-shrinkwrap.json") && npm install || echo Lockfile present, skipping normal install
+          npm install
       - name: Build and Test
         run: |
           npm run build --if-present

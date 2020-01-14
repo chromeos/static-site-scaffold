@@ -17,12 +17,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install
         if: |
-          test -f "package-lock.json" || test -f "npm-shrinkwrap.json"
+          [ -f "package-lock.json" ] || [ -f "npm-shrinkwrap.json" ]
         run: |
           npm ci
       - name: Install
         if: |
-          test ! -f "package-lock.json" && test ! -f "npm-shrinkwrap.json"
+          [ ! -f "package-lock.json" ] && [ ! -f "npm-shrinkwrap.json" ]
         run: |
           npm install
       - name: Build and Test

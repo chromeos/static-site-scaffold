@@ -35,9 +35,6 @@ sass:
 
 # Static Asset Folders
 assets:
-  images:
-    src: images/**/*
-    dest: images
   videos:
     src: videos/**/*
     dest: videos
@@ -47,6 +44,20 @@ assets:
   manifest:
     src: manifest.json
     dest: ''
+
+# Image optimization
+images:
+  resize:
+    min: 250
+    max: 1500
+    step: 150
+  sizes: 100vw
+  lazy: true
+  additional:
+    - images/icons/**/*
+  watch:
+    src: images/**/*
+    dest: images/**/*
 
 # HTML Optimization
 #   src is relative to the _output_ folder, not the pages or source folder.

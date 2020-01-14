@@ -16,7 +16,7 @@
 /* eslint-env node */
 const gulp = require('gulp');
 const scaffold = require('static-site-scaffold/lib/gulp.config')(gulp);
-const { assets, sass } = require('config');
+const { assets, sass, images } = require('config');
 const { buildSrcDest } = require('static-site-scaffold/lib/gulp/assets');
 
 /**
@@ -35,13 +35,13 @@ gulp.task('watch:sass', gulp.parallel(scaffold.sass, watchSass));
 // Static Assets
 
 /**
- * Watches images and runs moveImages
+ * Watches compiled images and recompiles Service Worker
  *
  * @return {object} Gulp watch object
  */
 function watchImages() {
-  const { src } = buildSrcDest(assets.images);
-  return gulp.watch(src, scaffold.images);
+  const { dest } = buildSrcDest(images.watch);
+  return gulp.watch(dest, scaffold.images);
 }
 
 /**

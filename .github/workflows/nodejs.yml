@@ -53,10 +53,15 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: site
+          path: public
+      - name: LS Public
+        run: |
+          ls
+          ls public
       - name: Lighthouse Audit
         uses: treosh/lighthouse-ci-action@v2
         with:
-          configPath:
+          configPath: .lighthouserc.json
   # Uncomment to deploy to GitHub Pages after including a GitHub token in project's secrets
   # deploy:
   #   needs: build-test
